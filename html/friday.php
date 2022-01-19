@@ -27,8 +27,8 @@ if ( ! session_id() ) @ session_start();
 # Versioning
 ##############
 
-$release="1.0.1";
-$date="20191203";
+$release="1.0.3";
+$date="20220119";
 $authors="Antony Le Béchec";
 
 #
