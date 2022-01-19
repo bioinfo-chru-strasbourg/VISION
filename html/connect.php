@@ -56,9 +56,13 @@ while ($row = mysql_fetch_assoc($result)) {
 	$user_projects[$row['project_id']]=$row['group_ref']."|".$row['project_ref'];
 };#while
 
-#echo "<pre>$user_id</pre>";
-#echo "<pre>"; print_r($user_groups); echo "</pre>";
-#echo "<pre>"; print_r($user_projects); echo "</pre>";
+if (!isset($user_groups)) {
+	$user_groups[1]="ALL";
+};
+
+// echo "<pre>$user_id</pre>";
+// echo "<pre>"; print_r($user_groups); echo "</pre>";
+// echo "<pre>"; print_r($user_projects); echo "</pre>";
 
 #die();
 

@@ -1,8 +1,8 @@
 
 ##############################################################
-# Dockerfile Version:   1.0.2
+# Dockerfile Version:   1.0.3
 # Software:             VISION
-# Software Version:     1.0.2b
+# Software Version:     1.0.3
 # Software Website:     https://gitlab.bioinfo-diag.fr/Strasbourg/VISION
 # Licence:              GNU Affero General Public License (AGPL)
 # Description:          VISION
@@ -33,6 +33,9 @@
 
 
 
+ARG THREADS="1"
+
+
 ########
 # FROM #
 ########
@@ -40,7 +43,7 @@
 FROM centos:7
 MAINTAINER Antony Le Bechec <antony.lebechec@gmail.com>
 LABEL Software="VISION" \
-	Version="1.0.2b" \
+	Version="1.0.3" \
 	Website="https://gitlab.bioinfo-diag.fr/Strasbourg/VISION" \
 	Description="VISION" \
 	License="GNU Affero General Public License (AGPL)" \
@@ -66,7 +69,7 @@ ENV YUM_REMOVE="zlib-devel zlib2-devel bzip2-devel lzma-devel xz-devel ncurses-d
 ###########
 
 ENV TOOL_NAME=vision
-ENV TOOL_VERSION=1.0.2b
+ENV TOOL_VERSION=1.0.3
 ENV TARBALL_LOCATION=https://gitlab.bioinfo-diag.fr/Strasbourg/VISION/repository/$TOOL_VERSION
 ENV TARBALL=archive.tar.gz
 ENV TARBALL_FOLDER=archive
@@ -175,7 +178,7 @@ RUN wget $TARBALL_LOCATION/$TARBALL && \
     tar xf $TARBALL && \
     rm -rf $TARBALL && \
     cd $TOOL_NAME-$TOOL_VERSION && \
-    make prefix=$TOOLS/$TOOL_NAME/$TOOL_VERSION install && \
+    make -j $THREADS prefix=$TOOLS/$TOOL_NAME/$TOOL_VERSION install && \
 	ln -s $TOOLS/$TOOL_NAME/$TOOL_VERSION/ $TOOLS/$TOOL_NAME/current && \
     cd ../ && \
     rm -rf $TOOL_NAME-$TOOL_VERSION
@@ -198,7 +201,7 @@ RUN wget $TARBALL_LOCATION/$TARBALL && \
     tar xf $TARBALL && \
     rm -rf $TARBALL && \
     cd $TOOL_NAME-$TOOL_VERSION && \
-    make prefix=$TOOLS/$TOOL_NAME/$TOOL_VERSION install && \
+    make -j $THREADS prefix=$TOOLS/$TOOL_NAME/$TOOL_VERSION install && \
 	ln -s $TOOLS/$TOOL_NAME/$TOOL_VERSION/ $TOOLS/$TOOL_NAME/current && \
     cd ../ && \
     rm -rf $TOOL_NAME-$TOOL_VERSION
@@ -211,7 +214,7 @@ RUN wget $TARBALL_LOCATION/$TARBALL && \
 
 ENV DATABASES=/databases
 ENV TOOL_NAME=howard
-ENV TOOL_VERSION=0.9.15b
+ENV TOOL_VERSION=0.9.15.1b
 ENV TARBALL_LOCATION=https://gitlab.bioinfo-diag.fr/Strasbourg/HOWARD/repository/$TOOL_VERSION
 ENV TARBALL=archive.tar.gz
 ENV TARBALL_FOLDER=archive
@@ -241,7 +244,7 @@ RUN wget $TARBALL_LOCATION/$TARBALL && \
 #################
 
 ENV TOOL_NAME=vision
-ENV TOOL_VERSION=1.0.2b
+ENV TOOL_VERSION=1.0.3
 ENV TARBALL_LOCATION=https://gitlab.bioinfo-diag.fr/Strasbourg/VISION/repository/$TOOL_VERSION
 ENV TARBALL=archive.tar.gz
 ENV TARBALL_FOLDER=archive

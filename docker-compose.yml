@@ -26,9 +26,9 @@ services:
             - .env
         ports:
             - ${DOCKER_JARVIS_SERVICE_VISION_PORT}:${DOCKER_JARVIS_SERVICE_VISION_PORT_INNER}
-        # volumes:
-        #     # Volumes for configuration
-        #     - ${DOCKER_JARVIS_FOLDER_CONFIG_VISION}:${DOCKER_JARVIS_SERVICE_VISION_INNER_FOLDER_CONFIGURATION}:ro
+        volumes:
+            # Volumes for configuration
+            - ${DOCKER_JARVIS_FOLDER_CONFIG_VISION}:${DOCKER_JARVIS_SERVICE_VISION_INNER_FOLDER_CONFIGURATION}:ro
         restart: always
         networks:
             - jarvis

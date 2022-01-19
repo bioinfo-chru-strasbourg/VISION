@@ -751,7 +751,13 @@ function find_hgvs ($hgvs_list,$gene_symbol="",$user_groups="",$customNM_infos="
 	$customNM_V="";
 	#$customHGVS=$hgvs_list;
 	$customHGVS="";
-	if (isset($user_groups)) {
+	if (!isset($user_groups)) {
+		$user_groups[1]="ALL";
+	};
+	#print "user_groups=$user_groups 0<BR>";
+
+	if (isset($user_groups) || 1) {
+		#print "find_hgvs 0<BR>";
 		foreach ($user_groups as $group_ref) {
 			#print "$group_ref<BR>";
 			$hgvs_full_split=explode(",",$hgvs_list);
@@ -760,7 +766,7 @@ function find_hgvs ($hgvs_list,$gene_symbol="",$user_groups="",$customNM_infos="
 				$customNM_array_V=$customNM_infos[$group_ref][$gene_symbol]; # ARRAY!!!
 				foreach ($hgvs_full_split as $anhgvs) {
 					if ($anhgvs!="") {
-						foreach ($customNM_array_V as $customNM_V=>$customNM_infos) {
+						foreach ($customNM_array_V as $customNM_V=>$customNM_infos_V) {
 							#print "$anhgvs $customNM_V<BR>";
 							if (preg_match("/$customNM_V/i",$anhgvs)) {
 								$sep=($customHGVS!="")?",":"";
@@ -781,6 +787,7 @@ function find_hgvs ($hgvs_list,$gene_symbol="",$user_groups="",$customNM_infos="
 		};#foreach
 	};#if
 	if ($customHGVS=="") {
+		#print "find_hgvs 1<BR>";
 		#$customHGVS=$hgvs_list;
 		$hgvs_full=(trim($hgvs_full_split[0])!="")?$hgvs_full_split[0]:$Symbol_hgvs;
 		$hgvs_split=explode(",",$hgvs_full);
@@ -2884,8 +2891,22 @@ function VCFFiletoHTML($Variants_VCFContent,$sample_id=0,$annotation_list=array(
 
 
 						#print $variant_array["HGVS"];
-						$customHGVS=find_hgvs($variant_array["HGVS"],$variant_array["NOMEN"],$variant_array["SYMBOL"],$user_groups,$customNM_infos);
-						if ($customHGVS == "" && $variant_array["NOMEN"] != "") {
+						#$customHGVS=find_hgvs($variant_array["HGVS"],$variant_array["NOMEN"],$variant_array["SYMBOL"],$user_groups,$customNM_infos);
+						#$customHGVS="NOMEN:".$variant_array["NOMEN"]." HGVS".$variant_array["HGVS"];
+						$customHGVS="";
+						#if ($variant_array["NOMEN"] != "") {
+						#	$customHGVS=explode(",",$variant_array["NOMEN"])[0];
+						#};#if
+						#print "1 customHGVS=$customHGVS<BR>";
+						if ($customHGVS == "" && $variant_array["HGVS"] != "") {
+							#print "1-1<BR>";
+							$customHGVS=find_hgvs($variant_array["HGVS"],$variant_array["SYMBOL"],$user_groups,$customNM_infos);
+							#print "1-1 customHGVS=$customHGVS<BR>";
+						} else if ($customHGVS == "" && $variant_array["HGVS_SNPEFF"] != "") {
+							#print "1-1<BR>";
+							$customHGVS=find_hgvs($variant_array["HGVS_SNPEFF"],$variant_array["SYMBOL"],$user_groups,$customNM_infos);
+							#print "1-1 customHGVS=$customHGVS<BR>";
+						} else if ($customHGVS == "" && $variant_array["NOMEN"] != "") {
 							$customHGVS=explode(",",$variant_array["NOMEN"])[0];
 						} else if ($customHGVS == "" && $variant_array["HGVS"] != "") { #hgvsEnsembl
 							$customHGVS=explode(",",$variant_array["HGVS"])[0];
@@ -2894,6 +2915,8 @@ function VCFFiletoHTML($Variants_VCFContent,$sample_id=0,$annotation_list=array(
 						} else if ($customHGVS == "" && $variant_array["SNPEFF_HGVS"] != "") { #hgvsEnsembl
 							$customHGVS=explode(",",$variant_array["SNPEFF_HGVS"])[0];
 						};#if
+						#print "2 customHGVS=$customHGVS<BR>";
+
 						#print "<PRE>!$customHGVS</PRE>";
 						#print "<PRE>!".$variant_array["NOMEN"]."</PRE>";
 						$customHGVS=str_replace(",","<BR>",$customHGVS);
