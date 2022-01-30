@@ -208,7 +208,7 @@ $annotation_list=array_merge($annotation_list_mandatory,$annotation_list);
 #
 # Security
 #
-if (!USER && 0) {
+if (!$USER && 0) {
 	$text="<div style='text-align:center'>Please login</div>";
 } else {
 
@@ -346,7 +346,7 @@ if (count($vcf_files)>0) {
 		if ( copy($vcf_file, $new_vcf_file[$key]) ) {
 		    #echo "<br>Copy success! $file to ".$new_vcf_file[$key];
 		} else{
-		    echo "<br>Copy failed.  $file to ".$new_vcf_file[$key];
+		    echo "<br>Copy failed. $vcf_file to ".$new_vcf_file[$key];
 		}
 
 	};
@@ -363,7 +363,7 @@ if (count($vcf_files)>0) {
 	#print "<pre>$command</pre><BR>";
 
 	$output_exec = shell_exec($command);
-	// print "<pre>$output_exec</pre><BR>";
+	#print "<pre>$output_exec</pre><BR>";
 	//
 	// print "<pre>";
 	// print_r(file($output_file));

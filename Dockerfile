@@ -44,7 +44,7 @@ FROM centos:7
 MAINTAINER Antony Le Bechec <antony.lebechec@gmail.com>
 LABEL Software="VISION" \
 	Version="1.0.3" \
-	Website="https://gitlab.bioinfo-diag.fr/Strasbourg/VISION" \
+	Website="https://github.com/bioinfo-chru-strasbourg/VISION" \
 	Description="VISION" \
 	License="GNU Affero General Public License (AGPL)" \
 	Usage="docker run --rm -d -p HOST_PORT:80 [-v HOST_CONFIG_FOLDER:/var/www/html/config] vision:version"
@@ -59,7 +59,7 @@ ENV DATA=/data
 ENV TOOL=/tool
 ENV DATABASES=/databases
 ENV YUM_INSTALL="gcc bc make wget perl-Switch perl-Digest-MD5 perl-Data-Dumper which zlib-devel zlib 	zlib2-devel zlib2 	bzip2-devel bzip2 	lzma-devel lzma 	xz-devel xz 	ncurses-devel 	unzip"
-ENV YUM_REMOVE="zlib-devel zlib2-devel bzip2-devel lzma-devel xz-devel ncurses-devel unzip gcc"
+ENV YUM_REMOVE="zlib-devel zlib2-devel bzip2-devel lzma-devel xz-devel ncurses-devel unzip gcc curl-devel"
 
 
 
@@ -68,30 +68,83 @@ ENV YUM_REMOVE="zlib-devel zlib2-devel bzip2-devel lzma-devel xz-devel ncurses-d
 # JARVIS #
 ###########
 
-ENV TOOL_NAME=vision
-ENV TOOL_VERSION=1.0.3
-ENV TARBALL_LOCATION=https://gitlab.bioinfo-diag.fr/Strasbourg/VISION/repository/$TOOL_VERSION
+# ENV TOOL_NAME=VISION
+# ENV TOOL_VERSION="1.0.3"
+# ENV TOOL_TARBALL="$TOOL_VERSION.tar.gz"
+# ENV TARBALL_LOCATION=https://github.com/bioinfo-chru-strasbourg/VISION/archive/refs/heads/
+# ENV TARBALL=archive.tar.gz
+# ENV TARBALL_FOLDER=archive
+# ENV DEST=$TOOLS/$TOOL_NAME/$TOOL_VERSION
+# ENV PATH=$TOOLS/$TOOL_NAME/$TOOL_VERSION/bin:$PATH
+
+# # INSTALL (add webtatic for php55)
+# RUN yum install -y wget && \
+# 	wget $TARBALL_LOCATION/$TARBALL && \
+#     tar xf $TARBALL && \
+#     rm -rf $TARBALL && \
+#     mkdir -p $TOOLS/$TOOL_NAME/$TOOL_VERSION/ && \
+#     cp $(ls ${TOOL_NAME,,}-$TOOL_VERSION* -d)/* $TOOLS/$TOOL_NAME/$TOOL_VERSION/ -R && \
+#     rm -rf $(ls ${TOOL_NAME,,}-$TOOL_VERSION* -d) && \
+#     ln -s $TOOLS/$TOOL_NAME/$TOOL_VERSION $TOOLS/$TOOL_NAME/current && \
+#     chmod 0775 $TOOLS/$TOOL_NAME/$TOOL_VERSION $TOOLS/$TOOL_NAME/current -R && \
+# 	mkdir -p $DATABASES && \
+# 	ln -s $TOOLS/$TOOL_NAME/$TOOL_VERSION $TOOLS/$TOOL_NAME/current && \
+# 	ln -s $TOOLS/$TOOL_NAME/$TOOL_VERSION/ /tool && \
+# 	cp $TOOLS/$TOOL_NAME/$TOOL_VERSION/conf/webtatic.repo /etc/yum.repos.d/webtatic.repo && \
+# 	chmod -R 0777 $TOOLS
+
+
+
+ENV TOOL_NAME=VISION
+ENV TOOL_VERSION="1.0.3"
+ENV TOOL_TARBALL="$TOOL_VERSION.tar.gz"
+ENV TARBALL_LOCATION=https://github.com/bioinfo-chru-strasbourg/VISION/archive/refs/heads/
 ENV TARBALL=archive.tar.gz
 ENV TARBALL_FOLDER=archive
 ENV DEST=$TOOLS/$TOOL_NAME/$TOOL_VERSION
 ENV PATH=$TOOLS/$TOOL_NAME/$TOOL_VERSION/bin:$PATH
 
-# INSTALL (add webtatic for php55)
-RUN yum install -y wget && \
-	wget $TARBALL_LOCATION/$TARBALL && \
-    tar xf $TARBALL && \
-    rm -rf $TARBALL && \
-    mkdir -p $TOOLS/$TOOL_NAME/$TOOL_VERSION/ && \
-    cp $(ls ${TOOL_NAME,,}-$TOOL_VERSION* -d)/* $TOOLS/$TOOL_NAME/$TOOL_VERSION/ -R && \
-    rm -rf $(ls ${TOOL_NAME,,}-$TOOL_VERSION* -d) && \
-    ln -s $TOOLS/$TOOL_NAME/$TOOL_VERSION $TOOLS/$TOOL_NAME/current && \
-    chmod 0775 $TOOLS/$TOOL_NAME/$TOOL_VERSION $TOOLS/$TOOL_NAME/current -R && \
-	mkdir -p $DATABASES && \
-	ln -s $TOOLS/$TOOL_NAME/$TOOL_VERSION $TOOLS/$TOOL_NAME/current && \
-	ln -s $TOOLS/$TOOL_NAME/$TOOL_VERSION/ /tool && \
-	cp $TOOLS/$TOOL_NAME/$TOOL_VERSION/conf/webtatic.repo /etc/yum.repos.d/webtatic.repo && \
-	chmod -R 0777 $TOOLS
+# # INSTALL (add webtatic for php55)
+ADD ./conf/webtatic.repo /etc/yum.repos.d/webtatic.repo
 
+# RUN yum install -y wget && \
+# 	wget $TARBALL_LOCATION/$TOOL_TARBALL && \
+#     tar xf $TOOL_TARBALL
+
+# RUN	ls -l && \
+#     rm -rf $TOOL_TARBALL && \
+#     mkdir -p $TOOLS/$TOOL_NAME/$TOOL_VERSION/ && \
+# 	ls -l && \
+# 	eccho && \
+#     cp $(ls ${TOOL_NAME,,}-$TOOL_VERSION* -d)/* $TOOLS/$TOOL_NAME/$TOOL_VERSION/ -R && \
+#     rm -rf $(ls ${TOOL_NAME,,}-$TOOL_VERSION* -d) && \
+#     ln -s $TOOLS/$TOOL_NAME/$TOOL_VERSION $TOOLS/$TOOL_NAME/current && \
+#     chmod 0775 $TOOLS/$TOOL_NAME/$TOOL_VERSION $TOOLS/$TOOL_NAME/current -R && \
+# 	mkdir -p $DATABASES && \
+# 	ln -s $TOOLS/$TOOL_NAME/$TOOL_VERSION $TOOLS/$TOOL_NAME/current && \
+# 	ln -s $TOOLS/$TOOL_NAME/$TOOL_VERSION/ /tool && \
+# 	cp $TOOLS/$TOOL_NAME/$TOOL_VERSION/conf/webtatic.repo /etc/yum.repos.d/webtatic.repo && \
+# 	chmod -R 0777 $TOOLS
+
+
+
+# ENV TOOL_NAME=VISION
+# ENV TOOL_VERSION="1.0.3"
+# ENV TOOL_TARBALL="$TOOL_VERSION.tar.gz"
+# ENV TARBALL_LOCATION=https://github.com/bioinfo-chru-strasbourg/VISION/archive/refs/heads/
+# ENV DEST=$TOOLS/$TOOL_NAME/$TOOL_VERSION
+# ENV PATH=$TOOLS/$TOOL_NAME/$TOOL_VERSION/bin:$PATH
+
+# # INSTALL
+# ADD ./html /var/www/html
+
+# RUN cp -R $TOOLS/$TOOL_NAME/$TOOL_VERSION/html/* /var/www/html/ && \
+# 	cp $TOOLS/$TOOL_NAME/$TOOL_VERSION/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh && \
+# 	cp $TOOLS/$TOOL_NAME/$TOOL_VERSION/conf/httpd.conf /etc/httpd/conf/httpd.conf && \
+# 	cp $TOOLS/$TOOL_NAME/$TOOL_VERSION/conf/php.ini /etc/php.ini && \
+# 	mkdir -p /var/www/html/tmp && \
+# 	chmod -R 0777 /var/www/html && \
+# 	chmod -R 0777 $TOOLS
 
 
 ###############
@@ -109,6 +162,7 @@ RUN yum upgrade -y && \
 	yum install -y \
 	autoconf \
 	curl \
+	curl-devel \
 	cyrus-sasl-lib \
 	gcc \
 	g++ \
@@ -167,7 +221,7 @@ RUN yum upgrade -y && \
 ##########
 
 ENV TOOL_NAME=htslib
-ENV TOOL_VERSION=1.9
+ENV TOOL_VERSION=1.12
 ENV TARBALL_LOCATION=https://github.com/samtools/$TOOL_NAME/releases/download/$TOOL_VERSION/
 ENV TARBALL=$TOOL_NAME-$TOOL_VERSION.tar.bz2
 ENV DEST=$TOOLS/$TOOL_NAME/$TOOL_VERSION
@@ -190,7 +244,7 @@ RUN wget $TARBALL_LOCATION/$TARBALL && \
 ############
 
 ENV TOOL_NAME=bcftools
-ENV TOOL_VERSION=1.9
+ENV TOOL_VERSION=1.12
 ENV TARBALL_LOCATION=https://github.com/samtools/$TOOL_NAME/releases/download/$TOOL_VERSION/
 ENV TARBALL=$TOOL_NAME-$TOOL_VERSION.tar.bz2
 ENV DEST=$TOOLS/$TOOL_NAME/$TOOL_VERSION
@@ -214,9 +268,10 @@ RUN wget $TARBALL_LOCATION/$TARBALL && \
 
 ENV DATABASES=/databases
 ENV TOOL_NAME=howard
-ENV TOOL_VERSION=0.9.15.1b
-ENV TARBALL_LOCATION=https://gitlab.bioinfo-diag.fr/Strasbourg/HOWARD/repository/$TOOL_VERSION
+ENV TOOL_VERSION=0.9.15.6
+ENV TARBALL_LOCATION=https://github.com/bioinfo-chru-strasbourg/howard/archive/refs/heads/
 ENV TARBALL=archive.tar.gz
+ENV TARBALL="$TOOL_VERSION.tar.gz"
 ENV TARBALL_FOLDER=archive
 ENV TOOL_DATABASE_FOLDER=/home/TOOLS/databases
 ENV DEST=$TOOLS/$TOOL_NAME/$TOOL_VERSION
@@ -226,9 +281,13 @@ ENV PATH=$TOOLS/$TOOL_NAME/$TOOL_VERSION/bin:$PATH
 RUN wget $TARBALL_LOCATION/$TARBALL && \
     tar xf $TARBALL && \
     rm -rf $TARBALL && \
-    mkdir -p $TOOLS/$TOOL_NAME/$TOOL_VERSION/ && \
-    cp $(ls ${TOOL_NAME^^}-$TOOL_VERSION* -d)/* $TOOLS/$TOOL_NAME/$TOOL_VERSION/ -R && \
-    rm -rf $(ls ${TOOL_NAME^^}-$TOOL_VERSION* -d) && \
+    mkdir -p $TOOLS/$TOOL_NAME/$TOOL_VERSION/
+RUN ls -l && \
+	ls ${TOOL_NAME}-$TOOL_VERSION* -d && \
+	cp $(ls ${TOOL_NAME}-$TOOL_VERSION* -d)/* $TOOLS/$TOOL_NAME/$TOOL_VERSION/ -R && \
+	echo $TOOLS/$TOOL_NAME/$TOOL_VERSION/ && \
+	ls -l $TOOLS/$TOOL_NAME/$TOOL_VERSION/ && \
+    rm -rf $(ls ${TOOL_NAME}-$TOOL_VERSION* -d) && \
     ln -s $TOOLS/$TOOL_NAME/$TOOL_VERSION $TOOLS/$TOOL_NAME/current && \
     chmod 0775 $TOOLS/$TOOL_NAME/$TOOL_VERSION $TOOLS/$TOOL_NAME/current -R && \
 	mkdir -p $DATABASES && \
@@ -252,11 +311,16 @@ ENV DEST=$TOOLS/$TOOL_NAME/$TOOL_VERSION
 ENV PATH=$TOOLS/$TOOL_NAME/$TOOL_VERSION/bin:$PATH
 
 # INSTALL
-RUN cp -R $TOOLS/$TOOL_NAME/$TOOL_VERSION/html/* /var/www/html/ -R && \
-	cp $TOOLS/$TOOL_NAME/$TOOL_VERSION/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh && \
-	cp $TOOLS/$TOOL_NAME/$TOOL_VERSION/conf/httpd.conf /etc/httpd/conf/httpd.conf && \
-	cp $TOOLS/$TOOL_NAME/$TOOL_VERSION/conf/php.ini /etc/php.ini && \
-	mkdir -p /var/www/html/tmp && \
+ADD ./html /var/www/html
+ADD docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+ADD ./conf/httpd.conf /etc/httpd/conf/httpd.conf
+ADD ./conf/php.ini /etc/php.ini
+
+# RUN cp -R $TOOLS/$TOOL_NAME/$TOOL_VERSION/html/* /var/www/html/ -R && \
+# 	cp $TOOLS/$TOOL_NAME/$TOOL_VERSION/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh && \
+# 	cp $TOOLS/$TOOL_NAME/$TOOL_VERSION/conf/httpd.conf /etc/httpd/conf/httpd.conf && \
+# 	cp $TOOLS/$TOOL_NAME/$TOOL_VERSION/conf/php.ini /etc/php.ini
+RUN	mkdir -p /var/www/html/tmp && \
 	chmod -R 0777 /var/www/html && \
 	chmod -R 0777 $TOOLS
 

@@ -651,11 +651,11 @@ function VCFLinetoArray ($variant_line,$variant_header) {
 	# ALLELE FREQUENCY calculation
 	foreach ($variant_array["SAMPLES"] as $sample_name=>$qualities) {
 		$AlleleFrequency="";
-		if ($qualities["VAF"]!="" && $qualities["VAF"]!="." ) {
+		if (isset($qualities["VAF"]) && $qualities["VAF"]!="" && $qualities["VAF"]!="." ) {
 			$AlleleFrequency=$qualities["VAF"];
-		} elseif ($qualities["FA"]!="" && $qualities["FA"]!="." ) {
+		} elseif (isset($qualities["FA"]) && $qualities["FA"]!="" && $qualities["FA"]!="." ) {
 			$AlleleFrequency=$qualities["FA"];
-		} elseif ($qualities["FREQ"]!="" && $qualities["FREQ"]!="." ) {
+		} elseif (isset($qualities["FREQ"]) && $qualities["FREQ"]!="" && $qualities["FREQ"]!="." ) {
 			if (strpos($qualities["FREQ"],"%")) {
 				$AlleleFrequency=str_replace("%","",$qualities["FREQ"])/100;
 			};#if
@@ -674,7 +674,11 @@ function VCFLinetoArray ($variant_line,$variant_header) {
 				};#if
 			};#foreach
 			#print "$depth_total $depth_ref $depth_alt<BR>";
-			$AlleleFrequency=$depth_alt/$depth_total;
+			$AlleleFrequency="";
+			if ($depth_total>0) {
+				$AlleleFrequency=$depth_alt/$depth_total;
+			}; #if
+			
 
 		};#if
 		$variant_array["SAMPLES"][$sample_name]["AlleleFrequency"]=number_format($AlleleFrequency,4);
@@ -709,18 +713,28 @@ function VCFLinetoArray ($variant_line,$variant_header) {
 	$DP_avg=$DP_sum/$DP_nb;
 	$AlleleFrequency_avg=$AlleleFrequency_sum/$AlleleFrequency_nb;
 
-	if ($variant_array["INFO"]["VAF_median"]!="") {
+	if (isset($variant_array["INFO"]["VAF_median"]) && $variant_array["INFO"]["VAF_median"]!="") {
 		$AlleleFrequency_avg=$variant_array["INFO"]["VAF_median"];
 	}; # if
 
 	$variant_array["GQ"]=$GQ_min;
 	$variant_array["DP"]=$DP_min;
 	$variant_array["AlleleFrequency"]=$AlleleFrequency_avg;
-	$variant_array["AD"]=$variant_array["SAMPLES"][""]["AD"];
-	$variant_array["GT"]=$variant_array["SAMPLES"][""]["GT"];
+	if (isset($variant_array["SAMPLES"][""]["AD"])) {
+		$variant_array["AD"]=$variant_array["SAMPLES"][""]["AD"];
+	} else {
+		$variant_array["AD"]="";
+	}; # if
+	if (isset($variant_array["SAMPLES"][""]["GT"])) {
+		$variant_array["GT"]=$variant_array["SAMPLES"][""]["GT"];
+	} else {
+		$variant_array["GT"]="";
+	}; # if
+	
+	
 
 	foreach ($variant_array["INFO"] as $info=>$info_value) {
-		if ($variant_array[strtoupper($info)]=="") {
+		if (!isset($variant_array[strtoupper($info)]) || $variant_array[strtoupper($info)]=="") {
 			$variant_array[strtoupper($info)]=$info_value;
 		};#if
 	};#foreach
