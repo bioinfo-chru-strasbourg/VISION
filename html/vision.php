@@ -163,16 +163,6 @@ if ($gene_filter=="") {
 };#if
 
 
-#
-# URL file
-#
-
-$gene_filter=$_REQUEST["vcf"];
-if ($gene_filter=="") {
-	$gene_filter="";
-};#if
-
-
 
 #
 # GROUP / project_id
